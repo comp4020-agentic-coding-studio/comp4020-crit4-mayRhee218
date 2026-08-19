@@ -1,9 +1,5 @@
 # Process overview
 
-<!-- TEMPLATE: this file is a shape to fill in, not a form. Replace everything
-     in it with your own overview, and delete this comment — `pnpm
-     check:evidence` will remind you if it's still here. -->
-
 A reading-guide to how the work came together --- a map to your process, not an
 essay about it. Markers read this file and follow its citations; they don't
 trawl the repo for evidence you didn't point at, so if a moment mattered, cite
@@ -17,60 +13,54 @@ cover every deliverable.
 
 ## What I built
 
-One paragraph: the thing, and the idea behind it.
+A keyboard piano: 11 white keys mapped to `A` through `'`, black keys on the
+QWERTY row above them following the real piano's C#-D#-_-F#-G#-A#-_ gap
+pattern, playable by physical keyboard, mouse, or touch, with a Web Audio API
+voice built from layered sine partials rather than one plain oscillator, so it
+has a longer, more natural decay instead of a synthesiser buzz.
 
 ## The moments that mattered
 
-Three or four for an assignment; fewer is fine for a weekly prototype. Keep the
-list short so each moment has room to do all four jobs:
+1. **Carrying the stack forward broke the entry point.** Keeping assignment
+   1's bare stack (no bundler, hand-written HTML/CSS/JS) meant `main.ts` --
+   loaded as `<script type="module" src="./main.ts">` -- couldn't run in a
+   browser at all without a build step. The obvious fix was to add one back;
+   instead I renamed the entry point to `main.js` and dropped the type
+   annotation, which is what "bare" actually means, rather than quietly
+   reintroducing the tooling the stack choice was meant to drop
+   ([`52d1e16`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit4-mayRhee218/commit/52d1e165a88d813aa1ed1ab589990ae223a4e81e)).
+   `pnpm check` going green straight after, with no bundler in the dependency
+   tree, is what told me it had actually landed.
 
-1. **what happened** --- the problem, or the thing that went wrong
-2. **what you did instead of the obvious thing** --- the call you made, and why
-   it beat the obvious one
-3. **how you knew it was right** --- the check you ran, the viewport you looked
-   at, what you read before accepting the diff
-4. **the citation** --- a commit or commit range, a `CLAUDE.md` change, a check
-   that went from red to green, a prompt paired with the commit it produced
+2. **Static-HTML tests can't see what JavaScript draws.** `spec/invariants.test.ts`
+   and my own `spec/crit-4.test.ts` both run against the *built* HTML through
+   JSDOM, which never executes `<script>` tags. That ruled out generating the
+   18 piano keys at runtime, which would have been the shorter way to write
+   `index.html` -- a JS-templated version would have shipped a page with no
+   buttons in it as far as the test suite (and a screen reader hitting the
+   page before the script runs) is concerned. I hand-wrote all 18 keys as
+   real `<button>` elements instead, so "gives the player at least one
+   focusable control" is true of the file on disk, not just of the DOM after
+   a script runs
+   ([`08b42d6`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit4-mayRhee218/commit/08b42d639ad020301cd285611cb3fc9c440d70a8)).
+   I checked this the same way the test does: read the built `dist/index.html`
+   directly, not the page after load.
 
-Jobs 2 and 3 are the ones the repo can't tell a reader on its own, so they're
-where the marks are. The strongest moments are the ones where a correction
-landed in the **harness** --- the standards and checks your work has to satisfy
---- rather than in a retry: a rule added to `CLAUDE.md`, a check wired up, an
-attempt thrown away. Retrying until it passes is the routine case, and changing
-what the work runs against is the skilled one.
-
-Cite each moment as a link whose text is the commit hash or range and whose
-target is this repo's commit or compare URL, so a reader clicks straight to the
-evidence:
-
-- one commit: [`a1b2c3d`](https://github.com/YOUR-ORG/YOUR-REPO/commit/a1b2c3d)
-- a range:
-  [`a1b2c3d...e4f5a6b`](https://github.com/YOUR-ORG/YOUR-REPO/compare/a1b2c3d...e4f5a6b)
-
-To pair a prompt with the commit it produced, quote the prompt (curated, not a
-full transcript) next to the citation:
-
-> the prompt, verbatim
-
-Screenshots are welcome where one carries the verification better than a
-sentence does. Commit the file to this repo and link it with a **relative**
-path, which is what makes it render on GitHub: `![alt text](docs/before.png)`.
-Images don't count towards the word count and don't replace the citation.
-
-### A worked moment, for shape
-
-Delete this section along with the rest of the boilerplate --- it's here to show
-the four jobs in one paragraph, not to be imitated in content.
-
-> The date formatter kept coming back with `toLocaleDateString()` and no locale
-> argument, so the same build rendered differently on my machine and in CI. I'd
-> already re-prompted it twice, which fixed the line but not the habit, so the
-> third time I put the rule in `CLAUDE.md` instead
-> ([`3f9ac21`](https://github.com/YOUR-ORG/YOUR-REPO/commit/3f9ac21)) and added
-> a spec test that fails on a bare `toLocaleDateString`. That's what told me it
-> had actually taken: the test went red against the old code and green against
-> the new, and the next two features it wrote passed it without prompting
-> ([`3f9ac21...b7e0d14`](https://github.com/YOUR-ORG/YOUR-REPO/compare/3f9ac21...b7e0d14)).
+3. **"Play it and see" caught what the unit tests couldn't.** The brief asks
+   for accurate black-key placement and a release that fades rather than
+   cuts off -- neither is something JSDOM can judge, since it never runs a
+   layout engine or an audio graph. I scripted a real headless Chromium
+   session to measure each black key's on-screen centre against the white-key
+   boundary math and to log every `AudioParam` automation call around a
+   press/release, rather than trusting the CSS percentages and the envelope
+   code by inspection. That's what turned up that the first release envelope
+   cut a note from full volume to silence in 0.18s regardless of how it had
+   already decayed -- technically a release, but not the "gradual, natural
+   tail" the sound was supposed to have. Rewriting it to continue the note's
+   own decay curve out to ~1.9s, and re-running the same measurement script
+   to confirm the new release ramp's timing, is the check that told me it
+   was fixed, not just different
+   ([`9c07f96`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit4-mayRhee218/commit/9c07f96cf34317561612d15ea1ed278ebf5e4cd1)).
 
 ## Before you ship
 
