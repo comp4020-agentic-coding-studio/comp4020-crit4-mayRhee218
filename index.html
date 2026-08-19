@@ -2,11 +2,11 @@
 <html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>COMP4020 prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Keyboard Piano</title>
     <meta
       name="description"
-      content="Replace this with one sentence saying what this page is. A search result and a link preview both show it."
+      content="A playable piano in the browser — press A through ' on your keyboard, or click or tap the keys."
     />
 
     <!--
@@ -21,18 +21,78 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header>
+    <header class="app-header">
       <nav aria-label="Primary">
         <a href="./">Home</a>
       </nav>
+      <h1>Keyboard Piano</h1>
+      <p class="subtitle">Play with <kbd>A</kbd>–<kbd>'</kbd>, or click / tap a key</p>
     </header>
-    <main>
-      <h1>COMP4020 prototype</h1>
-      <p data-testid="intro">
-        Replace this with your prototype. This week's brief is on the course website;
-        <code>spec/README.md</code> explains how the checks in this repo relate to it.
-      </p>
+
+    <main class="piano-wrap" aria-label="Playable piano">
+      <div class="piano" id="piano">
+        <div class="white-keys">
+          <button type="button" class="key white" data-code="KeyA" data-note="C4" data-freq="261.63" aria-label="C4, keyboard A" aria-pressed="false">
+            <span class="key-label">A</span><span class="note-label">C</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyS" data-note="D4" data-freq="293.66" aria-label="D4, keyboard S" aria-pressed="false">
+            <span class="key-label">S</span><span class="note-label">D</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyD" data-note="E4" data-freq="329.63" aria-label="E4, keyboard D" aria-pressed="false">
+            <span class="key-label">D</span><span class="note-label">E</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyF" data-note="F4" data-freq="349.23" aria-label="F4, keyboard F" aria-pressed="false">
+            <span class="key-label">F</span><span class="note-label">F</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyG" data-note="G4" data-freq="392.00" aria-label="G4, keyboard G" aria-pressed="false">
+            <span class="key-label">G</span><span class="note-label">G</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyH" data-note="A4" data-freq="440.00" aria-label="A4, keyboard H" aria-pressed="false">
+            <span class="key-label">H</span><span class="note-label">A</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyJ" data-note="B4" data-freq="493.88" aria-label="B4, keyboard J" aria-pressed="false">
+            <span class="key-label">J</span><span class="note-label">B</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyK" data-note="C5" data-freq="523.25" aria-label="C5, keyboard K" aria-pressed="false">
+            <span class="key-label">K</span><span class="note-label">C</span>
+          </button>
+          <button type="button" class="key white" data-code="KeyL" data-note="D5" data-freq="587.33" aria-label="D5, keyboard L" aria-pressed="false">
+            <span class="key-label">L</span><span class="note-label">D</span>
+          </button>
+          <button type="button" class="key white" data-code="Semicolon" data-note="E5" data-freq="659.26" aria-label="E5, keyboard semicolon" aria-pressed="false">
+            <span class="key-label">;</span><span class="note-label">E</span>
+          </button>
+          <button type="button" class="key white" data-code="Quote" data-note="F5" data-freq="698.46" aria-label="F5, keyboard apostrophe" aria-pressed="false">
+            <span class="key-label">'</span><span class="note-label">F</span>
+          </button>
+        </div>
+
+        <div class="black-keys">
+          <button type="button" class="key black" data-code="KeyW" data-note="C#4" data-freq="277.18" style="left: 9.0909%" aria-label="C sharp 4, keyboard W" aria-pressed="false">
+            <span class="key-label">W</span><span class="note-label">C♯</span>
+          </button>
+          <button type="button" class="key black" data-code="KeyE" data-note="D#4" data-freq="311.13" style="left: 18.1818%" aria-label="D sharp 4, keyboard E" aria-pressed="false">
+            <span class="key-label">E</span><span class="note-label">D♯</span>
+          </button>
+          <button type="button" class="key black" data-code="KeyT" data-note="F#4" data-freq="369.99" style="left: 36.3636%" aria-label="F sharp 4, keyboard T" aria-pressed="false">
+            <span class="key-label">T</span><span class="note-label">F♯</span>
+          </button>
+          <button type="button" class="key black" data-code="KeyY" data-note="G#4" data-freq="415.30" style="left: 45.4545%" aria-label="G sharp 4, keyboard Y" aria-pressed="false">
+            <span class="key-label">Y</span><span class="note-label">G♯</span>
+          </button>
+          <button type="button" class="key black" data-code="KeyU" data-note="A#4" data-freq="466.16" style="left: 54.5455%" aria-label="A sharp 4, keyboard U" aria-pressed="false">
+            <span class="key-label">U</span><span class="note-label">A♯</span>
+          </button>
+          <button type="button" class="key black" data-code="KeyO" data-note="C#5" data-freq="554.37" style="left: 72.7273%" aria-label="C sharp 5, keyboard O" aria-pressed="false">
+            <span class="key-label">O</span><span class="note-label">C♯</span>
+          </button>
+          <button type="button" class="key black" data-code="KeyP" data-note="D#5" data-freq="622.25" style="left: 81.8182%" aria-label="D sharp 5, keyboard P" aria-pressed="false">
+            <span class="key-label">P</span><span class="note-label">D♯</span>
+          </button>
+        </div>
+      </div>
     </main>
+
     <script src="./main.js"></script>
   </body>
 </html>
